@@ -41,6 +41,10 @@ $docsify.plugins = [].concat($docsify.plugins, function (hook, vm) {
 
     function data(value) {
         if (typeof value == 'string') {
+            if (value.endsWith(".inc")) {
+                console.log("hello");
+                loadinc(value);
+            }
             load(value);
         } else if (typeof value == 'object') {
             if (Array.isArray(value)) {
@@ -49,6 +53,32 @@ $docsify.plugins = [].concat($docsify.plugins, function (hook, vm) {
                 copy(vm.mustache, value);
             }
         }
+    }
+
+    function loadinc(url, key) {
+        function done() {
+            delete loading[url];
+            if (Object.keys(loading).length == 0 && onload) {
+                onload();
+                onload = undefined;
+            }
+        }
+        loading[url] = true;
+        Docsify.get(url, true)
+            .then((response) => {
+                let data = parse(response);
+
+                console.log(data.file);
+                data.file.forEach(element=> {
+                    console.log(element);
+                    load(element);
+                });
+
+                done();
+            }, (error) => {
+                console.log(error);
+                done();
+            });
     }
 
     function load(url, key) {
