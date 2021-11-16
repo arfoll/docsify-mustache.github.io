@@ -62,10 +62,8 @@ window.$docsify = {
 }
 ```
 
-## Documentation
+## Amazing
 
-Check the [documentation](https://docsify-mustache.github.io) site for more information.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](https://github.com/docsify-mustache/docsify-mustache.github.io/blob/master/LICENSE) for details.
+{{ $modules }}
+{{name}}
+{{ #modules}}

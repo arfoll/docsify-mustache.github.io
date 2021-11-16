@@ -248,3 +248,9 @@ Mustache template data is actually merged from multiple different sources before
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](https://github.com/docsify-mustache/docsify-mustache.github.io/blob/master/LICENSE) for details.
+
+## Amazing
+
+{{#xxx}}
+* {{name}}
+{{/xxx}}

@@ -1,0 +1,9 @@
+{
+  "name": "Willy",
+  "xxx": [
+    { "name": "dslds" },
+    { "name": "klsds" }
+  ],
+  "dslds" : { "other": "xxx" },
+  "klsds" : { "other": "yyy" }
+}

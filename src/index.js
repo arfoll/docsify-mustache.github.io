@@ -42,10 +42,10 @@ $docsify.plugins = [].concat($docsify.plugins, function (hook, vm) {
     function data(value) {
         if (typeof value == 'string') {
             if (value.endsWith(".inc")) {
-                console.log("hello");
                 loadinc(value);
+            } else {
+                load(value);
             }
-            load(value);
         } else if (typeof value == 'object') {
             if (Array.isArray(value)) {
                 value.forEach(data);
@@ -67,12 +67,41 @@ $docsify.plugins = [].concat($docsify.plugins, function (hook, vm) {
         Docsify.get(url, true)
             .then((response) => {
                 let data = parse(response);
+                // we ignore everything but the first val
+                val = Object.keys(data)[0];
+                console.log(val);
+                if (Array.isArray(data[val])) {
+                    console.log(data);
+                }
 
-                console.log(data.file);
                 data.file.forEach(element=> {
-                    console.log(element);
-                    load(element);
+                    loadx(element, val);
                 });
+
+                done();
+            }, (error) => {
+                console.log(error);
+                done();
+            });
+    }
+
+    function loadx(url, datakey) {
+        function done() {
+            delete loading[url];
+            if (Object.keys(loading).length == 0 && onload) {
+                onload();
+                onload = undefined;
+            }
+        }
+        loading[url] = true;
+        Docsify.get(url, true)
+            .then((response) => {
+                let data = parse(response);
+
+                if (!(vm.mustache.hasOwnProperty(datakey))) {
+                    vm.mustache[datakey] = {}
+                }
+                vm.mustache[datakey][data.name] = data;
 
                 done();
             }, (error) => {
@@ -134,11 +163,20 @@ $docsify.plugins = [].concat($docsify.plugins, function (hook, vm) {
             if (nextSource !== null && nextSource !== undefined) {
                 for (var nextKey in nextSource) {
                     if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
-                        target[nextKey] = nextSource[nextKey];
+                        if (target.hasOwnProperty(nextKey)) {
+//                            merged = {target[nextKey], obj[nextKey]};
+                              nextSource[nextKey].forEach(element => target[nextKey].push(element));
+//                              target[nextKey].push(nextSource[nextKey][0]);
+//                            target[nextKey] = nextSource[nextKey];
+                        }
+                        else {
+                            target[nextKey] = nextSource[nextKey];
+                        }
                     }
                 }
             }
         }
+        console.log(target);
         return target;
     }
 });
